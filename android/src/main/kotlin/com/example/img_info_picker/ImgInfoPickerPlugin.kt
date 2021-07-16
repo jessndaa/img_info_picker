@@ -51,7 +51,7 @@ class ImgInfoPickerPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
   }
   private fun getPermissionResult(result: Result, activity: Activity, arguments: Any?) {
     val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-    val callIntent = Intent(Intent.ACTION_VIEW_PERMISSION_USAGE)
+    val callIntent = Intent(Intent.ACTION_VIEW)
     callIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
     this.appActivity!!.intent = callIntent
     Permissions.check(this.appActivity!!/*context*/, permissions, "holla", null/*options*/, object : PermissionHandler() {
