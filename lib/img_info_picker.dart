@@ -15,15 +15,14 @@ class ImageInfoPicker {
   Map<int, MultiUseCallback> _callbacksById = new Map();
 
   Future<void> _methodCallHandler(MethodCall call) async {
-    print('arguments id is ${call.arguments["id"]}');
+        print('arguments id is ${call.arguments["id"]}');
     print('arguments are ${call.arguments}');
     print('callbacks are $_callbacksById');
     switch (call.method) {
       case 'callListener':
         if (call.arguments["id"] as int == CallbacksEnum.GET_IMAGES.index) {
           _callbacksById[call.arguments["id"]]!(call.arguments["args"]);
-        } else if (call.arguments["id"] as int ==
-            CallbacksEnum.GET_GALLERY.index) {
+        } else if (call.arguments["id"] as int == CallbacksEnum.GET_GALLERY.index) {
           String jsonString = call.arguments["args"];
 
           print('json String is $jsonString');
@@ -34,8 +33,7 @@ class ImageInfoPicker {
           }
           print('items are $phoneAlbums');
           _callbacksById[call.arguments["id"]]!(phoneAlbums);
-        } else if (call.arguments["id"] as int ==
-            CallbacksEnum.GET_IMAGES_OF_GALLERY.index) {
+        } else if (call.arguments["id"] as int == CallbacksEnum.GET_IMAGES_OF_GALLERY.index) {
           String jsonString = call.arguments["args"];
 
           print('json String is $jsonString');

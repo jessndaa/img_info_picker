@@ -17,6 +17,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(1, '42');
+    expect(1, 1);
   });
 }

@@ -183,7 +183,7 @@ class ImgInfoPickerPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
     }
   }
 
-  private fun getAllImageList(activity: Activity): ArrayList<String> {
+  private fun getAllImageList(activity: Activity): List<String> {
     val allImageList = ArrayList<String>()
     val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
     val projection = arrayOf(MediaStore.Images.ImageColumns.DATA, MediaStore.Images.ImageColumns.DISPLAY_NAME, MediaStore.Images.ImageColumns.DATE_ADDED, MediaStore.Images.ImageColumns.TITLE)
@@ -198,7 +198,7 @@ class ImgInfoPickerPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
       }
       c.close()
     }
-    return allImageList
+    return allImageList.reversed().toList()
   }
 
   private fun startListening(args: Any, result: Result?, methodName: String) {
