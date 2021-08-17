@@ -62,7 +62,6 @@ class ImageInfoPicker {
     int currentListenerId = callbacksEnum.index;
     print('current listener $callbacksEnum');
     _callbacksById[currentListenerId] = callback;
-    print("oouf");
     await _channel.invokeMethod(
       "startListening",
       {

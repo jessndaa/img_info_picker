@@ -14,7 +14,6 @@ class PhoneAlbum {
 //    for (dynamic item in albums) {
 //      albumsPhoto.add(PhonePhoto.fromMap(item as Map<String, dynamic>));
 //    }
-    return PhoneAlbum(
-        item["id"], item["name"], item["coverUri"], item['photosCount']);
+    return PhoneAlbum(item["id"], item["name"], item["coverUri"], item['photosCount']);
   }
 }

@@ -102,17 +102,15 @@ class ImgInfoPickerPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
         var imageId: String
         val bucketNameColumn = cur!!.getColumnIndex(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
 
-        val imageUriColumn = cur!!.getColumnIndex(
-                MediaStore.Images.Media.DATA)
+        val imageUriColumn = cur!!.getColumnIndex(MediaStore.Images.Media.DATA)
 
-        val imageIdColumn = cur!!.getColumnIndex(
-                MediaStore.Images.Media._ID)
+        val imageIdColumn = cur!!.getColumnIndex(MediaStore.Images.Media._ID)
 
         do {
           bucketName = cur!!.getString(bucketNameColumn)
           data = cur!!.getString(imageUriColumn)
           imageId = cur!!.getString(imageIdColumn)
-          phonePhotos.add(PhonePhoto(imageId, bucketName, data))
+          // phonePhotos.add(PhonePhoto(imageId, bucketName, data, ))
 
         } while (cur!!.moveToNext())
       }
@@ -184,20 +182,42 @@ class ImgInfoPickerPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
   }
 
   private fun getAllImageList(activity: Activity): List<String> {
+    print("all images")
     val allImageList = ArrayList<String>()
+    val allVideoList = ArrayList<String>()
     val uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-    val projection = arrayOf(MediaStore.Images.ImageColumns.DATA, MediaStore.Images.ImageColumns.DISPLAY_NAME, MediaStore.Images.ImageColumns.DATE_ADDED, MediaStore.Images.ImageColumns.TITLE)
+    var videoUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+    val projection = arrayOf(MediaStore.Images.ImageColumns._ID, MediaStore.Images.ImageColumns.DATA, MediaStore.Images.ImageColumns.DISPLAY_NAME, MediaStore.Images.ImageColumns.DATE_ADDED, MediaStore.Images.ImageColumns.TITLE, MediaStore.Images.ImageColumns.DATE_MODIFIED, MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME, MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME)
     val c = activity.contentResolver.query(uri, projection, null, null, null)
     if (c != null) {
       while (c.moveToNext()) {
-        //  ImageModel imageModel = new ImageModel();
-        Log.e("", "getAllImageList: " + c.getString(0))
-        Log.e("", "getAllImageList: " + c.getString(1))
-        Log.e("", "getAllImageList: " + c.getString(2))
-        allImageList.add(c.getString(0))
+        var id = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns._ID))
+        var photoUri = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DATA))
+        var albumName = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.BUCKET_DISPLAY_NAME))
+        var createdDate = c.getString(c.getColumnIndex( MediaStore.Images.ImageColumns.DATE_ADDED))
+        var lastUpdateDate = c.getString(c.getColumnIndex( MediaStore.Images.ImageColumns.DATE_ADDED))
+        var image = PhonePhoto(id, photoUri, albumName, videoTumbUrl = "", fileType =  "0", createdDate =  lastUpdateDate, lastModifiedDate =  createdDate)
+        allImageList.add(image.toJson())
       }
       c.close()
     }
+
+    val projectionVideo = arrayOf( MediaStore.Video.VideoColumns._ID,  MediaStore.Video.Media.DATA, MediaStore.Video.VideoColumns.BUCKET_DISPLAY_NAME, MediaStore.Video.VideoColumns.DATE_ADDED, MediaStore.Video.VideoColumns.TITLE, MediaStore.Video.VideoColumns.DATE_MODIFIED)
+    val videoCursor = activity.contentResolver.query(videoUri, projectionVideo, null, null, null)
+
+    if (videoCursor != null) {
+      while (videoCursor.moveToNext()) {
+        var id = videoCursor.getString(videoCursor.getColumnIndex(MediaStore.Video.Media._ID))
+        var photoUri = videoCursor.getString(videoCursor.getColumnIndex(MediaStore.Video.Media.DATA))
+        var albumName = videoCursor.getString(videoCursor.getColumnIndex(MediaStore.Video.VideoColumns.BUCKET_DISPLAY_NAME))
+        var createdDate = videoCursor.getString(videoCursor.getColumnIndex( MediaStore.Images.ImageColumns.DATE_ADDED))
+        var lastUpdateDate = videoCursor.getString(videoCursor.getColumnIndex( MediaStore.Images.ImageColumns.DATE_ADDED))
+        var image = PhonePhoto(id, photoUri, albumName, videoTumbUrl = "", fileType =  "1", createdDate =  lastUpdateDate, lastModifiedDate =  createdDate)
+        allVideoList.add(image.toJson())
+      }
+      videoCursor.close()
+    }
+    allImageList.addAll(allVideoList);
     return allImageList.reversed().toList()
   }
 
@@ -242,7 +262,6 @@ class ImgInfoPickerPlugin: FlutterPlugin, MethodCallHandler, ActivityAware{
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
     this.appActivity = binding.activity
-
   }
 
 

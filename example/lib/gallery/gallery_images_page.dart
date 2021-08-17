@@ -71,9 +71,7 @@ class _GalleryImagesPageState extends State<GalleryImagesPage> {
                 return Center(
                   child: Container(
                     child: Image.file(
-                      File(
-                        images[index].photoUri,
-                      ),
+                      File(images[index].uri),
                       repeat: ImageRepeat.noRepeat,
                       fit: BoxFit.cover,
                       matchTextDirection: true,
@@ -84,9 +82,7 @@ class _GalleryImagesPageState extends State<GalleryImagesPage> {
                 );
               },
             )
-          : Center(
-              child: CircularProgressIndicator(),
-            ),
+          : Center(child: CircularProgressIndicator()),
     );
   }
 }

@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:img_info_picker/img_info_picker.dart';
+import 'package:img_info_picker/phone_photo.dart';
 
 class ImagesPage extends StatefulWidget {
   @override
@@ -20,14 +21,12 @@ class _ImagesPageState extends State<ImagesPage> {
   }
 
   Future<void> getImages() async {
-    try {
-      await customImagePicker.getAllImages(callback: (msg) {
-        print('the message is $msg');
-        setState(() {
-          images = msg;
-        });
+    await customImagePicker.getAllImages(callback: (msg) {
+      print('the message is $msg');
+      setState(() {
+        images = msg;
       });
-    } on PlatformException {}
+    });
   }
 
   @override
@@ -44,11 +43,12 @@ class _ImagesPageState extends State<ImagesPage> {
               ),
               itemCount: images.length,
               itemBuilder: (context, index) {
+                var c = PhonePhoto.fromMap(jsonDecode(images[index]));
                 return Center(
                   child: Container(
                     child: Image.file(
                       File(
-                        images[index],
+                        c.uri,
                       ),
                     ),
                   ),
@@ -56,7 +56,7 @@ class _ImagesPageState extends State<ImagesPage> {
               },
             )
           : Center(
-              child: CircularProgressIndicator(),
+              // child: CircularProgressIndicator(),
             ),
     );
   }
